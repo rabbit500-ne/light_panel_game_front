@@ -17,10 +17,26 @@ body {
     align-items: center;
 }
 
-.light {
-    width: 30%;
-    height: 30%;
-    margin: 1.5%;
-    background-color: #ddd;
-    cursor: pointer;
+#light-panel {
+display: grid;
+grid-template-columns: repeat(3, 1fr); /* 3列に設定 */
+grid-template-rows: repeat(3, 1fr); /* 3行に設定 */
+gap: 10px; /* ライト間の隙間を設定 */
+max-width: 300px; /* パネル全体の幅を適切に設定 */
+margin: auto; /* 中央揃え */
 }
+
+.light {
+width: 80px; /* 適切なサイズに調整 */
+height: 80px; /* 適切なサイズに調整 */
+background-color: #ccc; /* 初期色を設定 */
+border-radius: 5px; /* 角を丸くする */
+transition: background-color 0.3s; /* 色の変化をスムーズに */
+cursor: pointer; /* ポインタを表示 */
+}
+
+.light.on {
+background-color: #ff0; /* 点灯時の色 */
+box-shadow: 0 0 10px rgba(255, 255, 0, 0.5); /* 点灯時の影 */
+}
+  
