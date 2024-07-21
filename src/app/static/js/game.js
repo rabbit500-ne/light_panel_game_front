@@ -1,63 +1,90 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const lights = document.querySelectorAll(".light");
-    const lightOrder = [];
-    let playerOrder = [];
-    let level = 1;
+class LightPuzzleGame {
+    constructor() {
+        this.lights = Array.from(document.querySelectorAll('.light'));
+        this.statusMessage = document.getElementById('status-message');
+        this.correctPattern = [];
+        this.playerPattern = [];
+        this.currentStage = 1;
+        this.isPlaying = false;
 
-    // Generate a random pattern for the current level
-    function generatePattern(level) {
+        this.initEventListeners();
+        this.autoStartGame();
+    }
+
+    initEventListeners() {
+        this.lights.forEach(light => {
+            light.addEventListener('click', () => this.handleLightClick(light));
+        });
+    }
+
+    autoStartGame() {
+        this.statusMessage.textContent = 'ゲームが3秒後に始まります...';
+        setTimeout(() => this.startGame(), 3000);
+    }
+
+    startGame() {
+        this.isPlaying = true;
+        this.playerPattern = [];
+        this.statusMessage.textContent = `ステージ ${this.currentStage}`;
+        this.correctPattern = this.generatePattern();
+        this.showPattern();
+    }
+
+    generatePattern() {
         const pattern = [];
-        for (let i = 0; i < level + 2; i++) {
-            const randomIndex = Math.floor(Math.random() * lights.length);
-            pattern.push(randomIndex);
+        const patternLength = Math.min(3 + this.currentStage, 16);
+        while (pattern.length < patternLength) {
+            const randomLight = Math.floor(Math.random() * 16);
+            if (pattern.length === 0 || pattern[pattern.length - 1] !== randomLight) {
+                pattern.push(randomLight);
+            }
         }
         return pattern;
     }
 
-    // Display the pattern to the player
-    function showPattern(pattern) {
-        let delay = 500;
-        pattern.forEach((index, i) => {
-            setTimeout(() => {
-                lights[index].style.backgroundColor = '#ffd700';
-                setTimeout(() => {
-                    lights[index].style.backgroundColor = '#d3d3d3';
-                }, 500);
-            }, delay * (i + 1));
-        });
+    async showPattern() {
+        this.statusMessage.textContent = 'パターンを記憶してください';
+        for (const lightIndex of this.correctPattern) {
+            await this.flashLight(this.lights[lightIndex]);
+        }
+        this.statusMessage.textContent = 'Ready';
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        this.statusMessage.textContent = 'パターンを再現してください';
+        this.playerPattern = [];
     }
 
-    // Handle player's click
-    lights.forEach((light, index) => {
-        light.addEventListener("click", () => {
-            playerOrder.push(index);
-            light.style.backgroundColor = '#ffd700';
-            setTimeout(() => {
-                light.style.backgroundColor = '#d3d3d3';
-            }, 500);
-
-            // Check if player's pattern matches the correct pattern
-            if (playerOrder.length === lightOrder.length) {
-                if (playerOrder.every((val, i) => val === lightOrder[i])) {
-                    alert("正解！次のレベルへ！");
-                    level++;
-                    startGame();
-                } else {
-                    alert("不正解！もう一度挑戦！");
-                    playerOrder = [];
-                    showPattern(lightOrder);
-                }
-            }
-        });
-    });
-
-    // Start the game
-    function startGame() {
-        playerOrder = [];
-        lightOrder.length = 0;
-        lightOrder.push(...generatePattern(level));
-        showPattern(lightOrder);
+    async flashLight(light) {
+        light.classList.add('on');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        light.classList.remove('on');
+        await new Promise(resolve => setTimeout(resolve, 200));
     }
 
-    startGame();
+    handleLightClick(light) {
+        if (!this.isPlaying) return;
+
+        const lightIndex = parseInt(light.dataset.id);
+        this.playerPattern.push(lightIndex);
+        this.flashLight(light);
+
+        if (this.playerPattern.length === this.correctPattern.length) {
+            this.checkPattern();
+        }
+    }
+
+    checkPattern() {
+        const isCorrect = this.playerPattern.every((light, index) => light === this.correctPattern[index]);
+        if (isCorrect) {
+            this.statusMessage.textContent = '正解！次のステージへ進みます';
+            this.currentStage++;
+            setTimeout(() => this.startGame(), 2000);
+        } else {
+            this.statusMessage.textContent = '不正解。もう一度挑戦してください';
+            setTimeout(() => this.startGame(), 2000);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    new LightPuzzleGame();
 });

@@ -4,32 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>リモートライトパズルゲーム</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <div id="light-panel" class="grid">
-            <!-- 16個のライトボタンを生成 -->
-            <button class="light" id="light1"></button>
-            <button class="light" id="light2"></button>
-            <button class="light" id="light3"></button>
-            <button class="light" id="light4"></button>
-            <button class="light" id="light5"></button>
-            <button class="light" id="light6"></button>
-            <button class="light" id="light7"></button>
-            <button class="light" id="light8"></button>
-            <button class="light" id="light9"></button>
-            <button class="light" id="light10"></button>
-            <button class="light" id="light11"></button>
-            <button class="light" id="light12"></button>
-            <button class="light" id="light13"></button>
-            <button class="light" id="light14"></button>
-            <button class="light" id="light15"></button>
-            <button class="light" id="light16"></button>
+    <div id="game-container">
+        <div id="light-panel">
+            <!-- 4x4のグリッドを作成 -->
+            <div class="light" data-id="0"></div>
+            <div class="light" data-id="1"></div>
+            <div class="light" data-id="2"></div>
+            <div class="light" data-id="3"></div>
+            <div class="light" data-id="4"></div>
+            <div class="light" data-id="5"></div>
+            <div class="light" data-id="6"></div>
+            <div class="light" data-id="7"></div>
+            <div class="light" data-id="8"></div>
+            <div class="light" data-id="9"></div>
+            <div class="light" data-id="10"></div>
+            <div class="light" data-id="11"></div>
+            <div class="light" data-id="12"></div>
+            <div class="light" data-id="13"></div>
+            <div class="light" data-id="14"></div>
+            <div class="light" data-id="15"></div>
         </div>
+        <div id="status-message"></div>
     </div>
-    <script src="/static/js/phaser.min.js"></script>
-    <script src="/static/js/webrtc_adapter.js"></script>
-    <script src="/static/js/game.js"></script>
+    <script src="static/js/game.js"></script>
 </body>
 </html>
